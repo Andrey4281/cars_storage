@@ -1,0 +1,16 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+
+<hibernate-mapping>
+    <class name = "ru.job4j.cars_storage.models.Car" table = "cars">
+
+        <id name = "id" column = "id">
+            <generator class="identity"/>
+        </id>
+
+        <property name = "name" column = "name"/>
+
+        <many-to-one name="carcass" column="id_carcass"/>
+        <many-to-one name="engine" column="id_engine"/>
+        <many-to-one name="transmission" column="id_transmission"/>
+    </class>
+</hibernate-mapping>
