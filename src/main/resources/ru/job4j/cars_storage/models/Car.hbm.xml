@@ -9,8 +9,17 @@
 
         <property name = "name" column = "name"/>
 
-        <many-to-one name="carcass" column="id_carcass"/>
-        <many-to-one name="engine" column="id_engine"/>
-        <many-to-one name="transmission" column="id_transmission"/>
+        <many-to-one name="carcass" column="id_carcass" not-null="true"/>
+        <many-to-one name="engine" column="id_engine" not-null="true"/>
+        <many-to-one name="transmission" column="id_transmission" not-null="true"/>
+
+        <set name="drivers" table="history_owner" inverse="false" lazy="true" fetch="select" cascade="all">
+            <key>
+                <column name="car_id" not-null="true"/>
+            </key>
+            <many-to-many entity-name="ru.job4j.cars_storage.models.Driver">
+                <column name="driver_id" not-null="true"/>
+            </many-to-many>
+        </set>
     </class>
 </hibernate-mapping>

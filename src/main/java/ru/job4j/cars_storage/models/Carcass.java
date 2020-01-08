@@ -1,11 +1,19 @@
 package ru.job4j.cars_storage.models;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name="carcass")
 public class Carcass {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id", nullable = false)
     private int id;
+    @Column(name = "name")
     private String name;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "carcass")
     private List<Car> cars;
 
     public Carcass() {
@@ -15,6 +23,10 @@ public class Carcass {
         this.id = id;
         this.name = name;
         this.cars = cars;
+    }
+
+    public Carcass(String name) {
+        this.name = name;
     }
 
     public int getId() {

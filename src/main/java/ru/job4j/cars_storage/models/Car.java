@@ -4,14 +4,37 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import javax.persistence.*;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
+
+@Entity
+@Table(name="cars")
 public class Car {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id", nullable = false)
     private int id;
+    @Column(name = "name")
     private String name;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="id_carcass", foreignKey = @ForeignKey(name="cars_id_carcass_fkey"), nullable = false)
     private Carcass carcass;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="id_engine", foreignKey = @ForeignKey(name = "cars_id_engine_fkey"), nullable = false)
     private Engine engine;
-    private  Transmission transmission;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="id_transmission", foreignKey = @ForeignKey(name = "cars_id_transmission_fkey"), nullable = false)
+    private Transmission transmission;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "history_owner",
+    joinColumns = @JoinColumn(name="car_id", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(name="driver_id", referencedColumnName = "id")
+    )
+    private Set<Driver> drivers;
 
     public Car() {
     }
@@ -65,12 +88,42 @@ public class Car {
         this.transmission = transmission;
     }
 
+    public Set<Driver> getDrivers() {
+        return drivers;
+    }
+
+    public void setDrivers(Set<Driver> drivers) {
+        this.drivers = drivers;
+    }
+
     public static void main(String[] args) {
         SessionFactory factory = new Configuration()
                 .configure()
                 .buildSessionFactory();
 
         Session session = factory.openSession();
+        Car carOne = new Car();
+        carOne.setName("CarForAndrey");
+        Carcass carcass = new Carcass();
+        carcass.setName("CarcassForAndrey");
+        Engine engine = new Engine();
+        engine.setName("EngineForAndrey");
+        Transmission transmissionOne = new Transmission();
+        transmissionOne.setName("TransmissionForAndrey");
+        carOne.setCarcass(carcass);
+        carOne.setEngine(engine);
+        carOne.setTransmission(transmissionOne);
+        Driver driver = new Driver();
+        driver.setName("Andrey");
+        carOne.setDrivers(new HashSet<>(Arrays.asList(driver)));
+        driver.setCars(new HashSet<>(Arrays.asList(carOne)));
+        session.beginTransaction();
+        session.save(carcass);
+        session.save(engine);
+        session.save(transmissionOne);
+        session.save(carOne);
+        session.getTransaction().commit();
+
         Car car = session.get(Car.class, 2);
         Transmission transmission = session.get(Transmission.class, 1);
         System.out.println(car);
@@ -88,20 +141,4 @@ public class Car {
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Car car = (Car) o;
-        return id == car.id
-                && Objects.equals(name, car.name)
-                && Objects.equals(carcass, car.carcass)
-                && Objects.equals(engine, car.engine)
-                && Objects.equals(transmission, car.transmission);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, carcass, engine, transmission);
-    }
 }

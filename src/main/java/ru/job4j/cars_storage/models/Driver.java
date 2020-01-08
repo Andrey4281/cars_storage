@@ -1,33 +1,34 @@
 package ru.job4j.cars_storage.models;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+
 
 @Entity
-@Table(name="engine")
-public class Engine {
+@Table(name="drivers")
+public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", nullable = false)
     private int id;
     @Column(name = "name")
     private String name;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "engine")
-    private List<Car> cars;
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "drivers")
+    private Set<Car> cars;
 
-    public Engine() {
+    public Driver() {
     }
 
-    public Engine(int id, String name, List<Car> cars) {
+    public Driver(int id, String name) {
         this.id = id;
         this.name = name;
-        this.cars = cars;
     }
 
-    public Engine(String name) {
+    public Driver(String name) {
         this.name = name;
     }
+
 
     public int getId() {
         return id;
@@ -45,6 +46,14 @@ public class Engine {
         this.name = name;
     }
 
+    public Set<Car> getCars() {
+        return cars;
+    }
+
+    public void setCars(Set<Car> cars) {
+        this.cars = cars;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -53,29 +62,13 @@ public class Engine {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Engine engine = (Engine) o;
-        return id == engine.id
-                && Objects.equals(name, engine.name);
+        Driver driver = (Driver) o;
+        return id == driver.id
+                && Objects.equals(name, driver.name);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
-    }
-
-    public List<Car> getCars() {
-        return cars;
-    }
-
-    public void setCars(List<Car> cars) {
-        this.cars = cars;
-    }
-
-    @Override
-    public String toString() {
-        return "Engine{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
     }
 }

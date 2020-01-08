@@ -1,11 +1,20 @@
 package ru.job4j.cars_storage.models;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+
+@Entity
+@Table(name="transmission")
 public class Transmission {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id", nullable = false)
     private int id;
+    @Column(name = "name")
     private String name;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "transmission")
     private List<Car> cars;
 
     public Transmission() {
@@ -15,6 +24,10 @@ public class Transmission {
         this.id = id;
         this.name = name;
         this.cars = cars;
+    }
+
+    public Transmission(String name) {
+        this.name = name;
     }
 
     public int getId() {

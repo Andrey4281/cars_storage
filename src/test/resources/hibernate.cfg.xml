@@ -8,14 +8,13 @@
         <property name="connection.username">postgres</property>
         <property name="connection.password">12345</property>
         <property name="show_sql">true</property>
-        <property name="format_sql">true</property>
         <property name="dialect">org.hibernate.dialect.PostgreSQL95Dialect</property>
 
-        <mapping resource="ru/job4j/cars_storage/models/Carcass.hbm.xml"/>
-        <mapping resource="ru/job4j/cars_storage/models/Engine.hbm.xml"/>
-        <mapping resource="ru/job4j/cars_storage/models/Transmission.hbm.xml"/>
-        <mapping resource="ru/job4j/cars_storage/models/Car.hbm.xml"/>
-        <mapping resource="ru/job4j/cars_storage/models/Driver.hbm.xml"/>
+        <mapping class="ru.job4j.cars_storage.models.Car"/>
+        <mapping class="ru.job4j.cars_storage.models.Engine"/>
+        <mapping class="ru.job4j.cars_storage.models.Transmission"/>
+        <mapping class="ru.job4j.cars_storage.models.Carcass"/>
+        <mapping class="ru.job4j.cars_storage.models.Driver"/>
 
     </session-factory>
 </hibernate-configuration>
